@@ -8,6 +8,7 @@ import NotificationScreen from "./src/screens/NotificationScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import SignUpScreen from "./src/screens/SignUpScreen";
 import SignInScreen from "./src/screens/SignInScreen";
+import IndividualPostScreen from "./src/screens/IndividualPostScreen";
 
 import { AuthContext, AuthProvider } from "./src/providers/AuthProvider";
 import { Entypo, AntDesign, Ionicons } from "@expo/vector-icons";
@@ -20,6 +21,7 @@ const AppDrawerScreen = () => {
     <AppDrawer.Navigator>
       <AppDrawer.Screen name="Home" component={HomeTabScreen} />
       <AppDrawer.Screen name="Profile" component={ProfileScreen} />
+      <AppDrawer.Screen name="My Posts" component={IndividualPostScreen}/>
     </AppDrawer.Navigator>
   );
 };
