@@ -14,47 +14,26 @@ import {
     Input,
     Header,
 } from "react-native-elements";
+import { AsyncStorage } from "react-native";
 import PostCard from "./../components/PostCard";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { AuthContext } from "../providers/AuthProvider";
 import { getPosts } from "./../requests/Posts";
 import { getUsers } from "./../requests/Users";
+import moment from "moment";
+import { storeDataJSON, getDataJSON, removeData } from "../functions/AsyncStorageFunctions";
 
 const HomeScreen = (props) => {
-    const [posts, setPosts] = useState([]);
-    const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(false);
-
-    const loadPosts = async () => {
-        setLoading(true);
-        const response = await getPosts();
-        if (response.ok) {
-            setPosts(response.data);
-        }
-    };
-
-    const loadUsers = async () => {
-        const response = await getUsers();
-        if (response.ok) {
-            setUsers(response.data);
-        }
-        setLoading(false);
-    };
-    const getName = (id) => {
-        let Name = "";
-        users.forEach((element) => {
-            if (element.id == id) Name = element.name;
-        });
-        return Name;
-    };
-
+    const [postBody, setpostBody] = useState("");
+    const [postList, setpostList] = useState([]);
     useEffect(() => {
-        loadPosts();
-        loadUsers();
+        const getData = async () => {
+            setpostList(await getDataJSON('posts'));
+        }
+        getData();
     }, []);
 
-    if (!loading) {
-        return (
+    return (
             <AuthContext.Consumer>
                 {(auth) => (
                     <View style={styles.viewStyle}>
@@ -80,35 +59,65 @@ const HomeScreen = (props) => {
                             <Input
                                 placeholder="What's On Your Mind?"
                                 leftIcon={<Entypo name="pencil" size={24} color="black" />}
+                                onChangeText={function (currentText) {
+                                    setpostBody(currentText);
+                                }}
                             />
-                            <Button title="Post" type="outline" onPress={function () {
+                            <Button
+                                title="Post"
+                                type="outline"
+                                onPress={async()=> {
+                                if (postList != null) {
+                                    setpostList(posts => [
+                                        ...posts,
+                                    {
+                                        name: auth.CurrentUser.name,
+                                        email: auth.CurrentUser.email,
+                                        date: moment().format(),
+                                        post: postBody,
+                                        key: postBody
+                                    },
 
-                            }} />
+                                    ]);
+                                }
+                                else {
+                                    const a = [];
+                                    a.push({
+                                        name: auth.CurrentUser.name,
+                                        email: auth.CurrentUser.email,
+                                        date: moment().format(),
+                                        post: postBody,
+                                        key: postBody
+                                    });
+                                    setpostList(a);
+                                }
+                                await storeDataJSON('posts', postList);
+                                }
+                            }
+                            />
+                            <Button
+                                title="Delete Post"
+                                type="outline"
+                                onPress={async () => { await removeData("Post"); }}
+                            />
                         </Card>
 
                         <FlatList
-                            data={posts}
-                            renderItem={function ({ item }) {
-                                return (
+                            data={postList}
+                            renderItem={postItem=>{
+                              
                                     <PostCard
-                                        author={getName(item.userId)}
-                                        title={item.title}
-                                        body={item.body}
+                                        name={postItem.item.name}
+                                        date={postItem.item.date}
+                                        post={postItem.item.post}
                                     />
-                                );
+                             
                             }}
                         />
                     </View>
                 )}
             </AuthContext.Consumer>
         );
-    } else {
-        return (
-            <View style={{ flex: 1, justifyContent: "center" }}>
-                <ActivityIndicator size="large" color="red" animating={true} />
-            </View>
-        );
-    }
 };
 
 const styles = StyleSheet.create({

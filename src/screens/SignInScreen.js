@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     viewStyle: {
         flex: 1,
         justifyContent: "center",
-        backgroundColor: "#fff",
+        backgroundColor: "#E9446A",
     },
     cardStyle: {
 

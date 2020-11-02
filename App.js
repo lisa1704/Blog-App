@@ -1,4 +1,5 @@
 import React from "react";
+import { AsyncStorage } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
@@ -11,6 +12,7 @@ import SignInScreen from "./src/screens/SignInScreen";
 import IndividualPostScreen from "./src/screens/IndividualPostScreen";
 
 import { AuthContext, AuthProvider } from "./src/providers/AuthProvider";
+import PostCard from "./src/components/PostCard";
 import { Entypo, AntDesign, Ionicons } from "@expo/vector-icons";
 const AuthStack = createStackNavigator();
 const HomeTab = createMaterialBottomTabNavigator();
@@ -58,7 +60,7 @@ const HomeTabScreen = () => {
               />
             ),
         }}
-      />
+          />
     </HomeTab.Navigator>
   );
 };

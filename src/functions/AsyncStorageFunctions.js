@@ -38,7 +38,7 @@ const getDataJSON = async (key) => {
       const jsonData = JSON.parse(data);
       return jsonData;
     } else {
-      alert("No data with this key!");
+      //alert("No data with this key!");
     }
   } catch (error) {
     alert(error);
@@ -53,5 +53,4 @@ const removeData = async (key) => {
     alert(error);
   }
 };
-
 export { storeData, storeDataJSON, getData, getDataJSON, removeData };
