@@ -103,8 +103,8 @@ const HomeScreen = (props) => {
                         </Card>
 
                         <FlatList
-                            data={postList}
-                            renderItem={postItem=>{
+                        data={postList}
+                        renderItem={function ({ postItem}){
                               
                                     <PostCard
                                         name={postItem.item.name}
