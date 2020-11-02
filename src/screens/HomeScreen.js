@@ -26,14 +26,18 @@ import { storeDataJSON, getDataJSON, removeData } from "../functions/AsyncStorag
 const HomeScreen = (props) => {
     const [postBody, setpostBody] = useState("");
     const [postList, setpostList] = useState([]);
+
+    
+    
     useEffect(() => {
         const getData = async () => {
             setpostList(await getDataJSON('posts'));
         }
         getData();
+      
     }, []);
 
-    return (
+        return (
             <AuthContext.Consumer>
                 {(auth) => (
                     <View style={styles.viewStyle}>
@@ -66,58 +70,56 @@ const HomeScreen = (props) => {
                             <Button
                                 title="Post"
                                 type="outline"
-                                onPress={async()=> {
-                                if (postList != null) {
-                                    setpostList(posts => [
-                                        ...posts,
-                                    {
-                                        name: auth.CurrentUser.name,
-                                        email: auth.CurrentUser.email,
-                                        date: moment().format(),
-                                        post: postBody,
-                                        key: postBody
-                                    },
+                                onPress={async () => {
+                                    if (postList != null) {
+                                        setpostList(posts => [
+                                            ...posts,
+                                            {
+                                                name: auth.CurrentUser.name,
+                                                email: auth.CurrentUser.email,
+                                                date: moment().format(),
+                                                post: postBody,
+                                                key: postBody
+                                            },
 
-                                    ]);
+                                        ]);
+                                    }
+                                    else {
+                                        const a = [];
+                                        a.push({
+                                            name: auth.CurrentUser.name,
+                                            email: auth.CurrentUser.email,
+                                            date: moment().format(),
+                                            post: postBody,
+                                            key: postBody
+                                        });
+                                        setpostList(a);
+                                    }
+                                    await storeDataJSON('posts', postList);
                                 }
-                                else {
-                                    const a = [];
-                                    a.push({
-                                        name: auth.CurrentUser.name,
-                                        email: auth.CurrentUser.email,
-                                        date: moment().format(),
-                                        post: postBody,
-                                        key: postBody
-                                    });
-                                    setpostList(a);
                                 }
-                                await storeDataJSON('posts', postList);
-                                }
-                            }
                             />
-                            <Button
-                                title="Delete Post"
-                                type="outline"
-                                onPress={async () => { await removeData("Post"); }}
-                            />
+                            
                         </Card>
 
                         <FlatList
-                        data={postList}
-                        renderItem={function ({ postItem}){
-                              
-                                    <PostCard
-                                        name={postItem.item.name}
-                                        date={postItem.item.date}
-                                        post={postItem.item.post}
-                                    />
-                             
+                            data={postList}
+                            renderItem={function ({ postItem }) {
+
+                                <PostCard
+                                    name={postItem.item.name}
+                                    date={postItem.item.date}
+                                    post={postItem.item.post}
+                                />
+
                             }}
                         />
                     </View>
                 )}
             </AuthContext.Consumer>
         );
+
+    
 };
 
 const styles = StyleSheet.create({

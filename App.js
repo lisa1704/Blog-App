@@ -10,10 +10,8 @@ import ProfileScreen from "./src/screens/ProfileScreen";
 import SignUpScreen from "./src/screens/SignUpScreen";
 import SignInScreen from "./src/screens/SignInScreen";
 import IndividualPostScreen from "./src/screens/IndividualPostScreen";
-import EditProfile from "./src/screens/EditProfile";
 
 import { AuthContext, AuthProvider } from "./src/providers/AuthProvider";
-import { ProfileContext, ProfileProvider } from "./src/providers/ProfileProvider";
 import PostCard from "./src/components/PostCard";
 import { Entypo, AntDesign, Ionicons } from "@expo/vector-icons";
 const AuthStack = createStackNavigator();
@@ -25,8 +23,6 @@ const AppDrawerScreen = () => {
         <AppDrawer.Navigator>
             <AppDrawer.Screen name="Home" component={HomeTabScreen} />
             <AppDrawer.Screen name="Profile" component={ProfileScreen} />
-            <AppDrawer.Screen name="My Posts" component={IndividualPostScreen} />
-            <AppDrawer.Screen name="Edit Profile" component={EditProfile}/>
         </AppDrawer.Navigator>
     );
 };

@@ -36,8 +36,9 @@ const ProfileScreen = (props) => {
                                     'https://scontent.fdac37-1.fna.fbcdn.net/v/t1.0-9/41871769_2115253698802769_1077357610937614336_n.jpg?_nc_cat=106&ccb=2&_nc_sid=8bfeb9&_nc_eui2=AeEJMk41YbLcJG-oNJ0r8UHYamkAvE2UaotqaQC8TZRqi9vYaszKI9h0qy9qveAqGVQJoUDjBFHDoIJroP79txpo&_nc_ohc=YEy21tChJhoAX9pd-8u&_nc_ht=scontent.fdac37-1.fna&oh=3d60f86dcff46e59bc887f8d33a480a9&oe=5FC63D69',
                             }}
                         />
-                        <Text style={styles.userTextStyle}>{auth.CurrentUser.name}</Text>
+                       
                     </View>
+                    <Text style={styles.userTextStyle}>{auth.CurrentUser.name}</Text>
                     <Button
                         buttonStyle={{ width: "40%", alignSelf: "center", padding:10 }}
                         title="Delete Profile"
