@@ -1,0 +1,16 @@
+npm install -g expo-cli
+https://reactnative.dev/docs/0.60/getting-started
+https://stackoverflow.com/questions/41117421/ps1-cannot-be-loaded-because-running-scripts-is-disabled-on-this-system
+expo whoami
+expo login
+npm install
+repair
+expo init <project name>
+cd <dir>
+npm install @react-navigation/native @react-navigation/stack
+npm install react-native-elements
+npm install moment --save 
+https://icons.expo.fyi/?fbclid=IwAR0LudWJMlh2hzHGlsNKAaLH8xCerwhVfiypPoy35FmTECsScEdT9NAjuXM
+expo install react-native-reanimated react-native-gesture-handler react-native-screens react-native-safe-area-context @react-native-community/masked-view
+npm install apisauce
+npm install @react-native-community/netinfo

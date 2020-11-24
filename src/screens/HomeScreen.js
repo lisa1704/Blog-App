@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-    ScrollView,
-    View,
-    StyleSheet,
-    FlatList,
-    ActivityIndicator,
-} from "react-native";
+import { ScrollView, View, StyleSheet, FlatList } from "react-native";
 import {
     Card,
     Button,
@@ -14,112 +8,113 @@ import {
     Input,
     Header,
 } from "react-native-elements";
-import { AsyncStorage } from "react-native";
-import PostCard from "./../components/PostCard";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { AuthContext } from "../providers/AuthProvider";
-import { getPosts } from "./../requests/Posts";
-import { getUsers } from "./../requests/Users";
+import PostCard from "../components/PostCard";
+import {
+    storeDataJSON,
+    getDataJSON,
+    removeData,
+} from "../functions/AsyncStorageFunctions";
 import moment from "moment";
-import { storeDataJSON, getDataJSON, removeData } from "../functions/AsyncStorageFunctions";
 
 const HomeScreen = (props) => {
     const [postBody, setpostBody] = useState("");
-    const [postList, setpostList] = useState([]);
+    const [postArr, setpostArr] = useState([]);
+    const getData = async () => {
+        await getDataJSON("posts").then((data) => {
+            if (data == null) {
+                setpostArr([]);
+            } else setpostArr(data);
+        });
+    };
 
-    
-    
+    const init = async () => {
+        await removeData("posts");
+    };
     useEffect(() => {
-        const getData = async () => {
-            setpostList(await getDataJSON('posts'));
-        }
         getData();
-      
     }, []);
-
-        return (
-            <AuthContext.Consumer>
-                {(auth) => (
-                    <View style={styles.viewStyle}>
-                        <Header
-                            leftComponent={{
-                                icon: "menu",
-                                color: "#fff",
-                                onPress: function () {
-                                    props.navigation.toggleDrawer();
-                                },
-                            }}
-                            centerComponent={{ text: "The Office", style: { color: "#fff" } }}
-                            rightComponent={{
-                                icon: "lock-outline",
-                                color: "#fff",
-                                onPress: function () {
-                                    auth.setIsLoggedIn(false);
-                                    auth.setCurrentUser({});
-                                },
-                            }}
-                        />
-                        <Card>
-                            <Input
-                                placeholder="What's On Your Mind?"
-                                leftIcon={<Entypo name="pencil" size={24} color="black" />}
-                                onChangeText={function (currentText) {
-                                    setpostBody(currentText);
-                                }}
-                            />
-                            <Button
-                                title="Post"
-                                type="outline"
-                                onPress={async () => {
-                                    if (postList != null) {
-                                        setpostList(posts => [
-                                            ...posts,
-                                            {
-                                                name: auth.CurrentUser.name,
-                                                email: auth.CurrentUser.email,
-                                                date: moment().format(),
-                                                post: postBody,
-                                                key: postBody
-                                            },
-
-                                        ]);
-                                    }
-                                    else {
-                                        const a = [];
-                                        a.push({
-                                            name: auth.CurrentUser.name,
-                                            email: auth.CurrentUser.email,
-                                            date: moment().format(),
-                                            post: postBody,
-                                            key: postBody
-                                        });
-                                        setpostList(a);
-                                    }
-                                    await storeDataJSON('posts', postList);
-                                }
-                                }
-                            />
-                            
-                        </Card>
-
-                        <FlatList
-                            data={postList}
-                            renderItem={function ({ postItem }) {
-
-                                <PostCard
-                                    name={postItem.item.name}
-                                    date={postItem.item.date}
-                                    post={postItem.item.post}
-                                />
-
+    return (
+        <AuthContext.Consumer>
+            {(auth) => (
+                <View style={styles.viewStyle}>
+                    <Header
+                        backgroundColor="blue"
+                        leftComponent={{
+                            icon: "menu",
+                            color: "#fff",
+                            onPress: function () {
+                                props.navigation.toggleDrawer();
+                            },
+                        }}
+                        centerComponent={{ text: "The Office", style: { color: "#fff" } }}
+                        rightComponent={{
+                            icon: "lock-outline",
+                            color: "#fff",
+                            onPress: function () {
+                                auth.setIsLoggedIn(false);
+                                auth.setCurrentUser({});
+                            },
+                        }}
+                    />
+                    <Card containerStyle={{ backgroundColor: "#ffff" }}>
+                        <Input
+                            placeholder="What's On Your Mind?"
+                            leftIcon={<Entypo name="pencil" size={24} color="#152a38" />}
+                            onChangeText={function (currentInput) {
+                                setpostBody(currentInput);
                             }}
                         />
-                    </View>
-                )}
-            </AuthContext.Consumer>
-        );
+                        <Button
+                            buttonStyle={{ borderColor: "#29435c" }}
+                            title="Post"
+                            titleStyle={{ color: "#29435c" }}
+                            type="outline"
+                            onPress={async () => {
+                                let arr = [
+                                    ...postArr,
+                                    {
+                                        name: auth.CurrentUser.name,
+                                        email: auth.CurrentUser.email,
+                                        date: moment().format("DD MMM, YYYY"),
+                                        post: postBody,
+                                        key: postBody,
+                                    },
+                                ];
 
-    
+                                await storeDataJSON("posts", arr).then(() => {
+                                    setpostArr(arr);
+                                });
+
+                                //alert("Post Successful!");
+                                //setPostText("");
+                            }}
+                        />
+                        <Button
+                            buttonStyle={{ borderColor: "black" }}
+                            title="Delete Post"
+                            titleStyle={{ color: "#29435c" }}
+                            type="outline"
+                            onPress={async function () {
+                                await removeData("Post");
+                            }}
+                        /> 
+                    </Card>
+                    <FlatList
+                        data={postArr}
+                        renderItem={(pItem) => (
+                            <PostCard
+                                name={pItem.item.name}
+                                date={pItem.item.date}
+                                post={pItem.item.post}
+                            />
+                        )}
+                    />
+                </View>
+            )}
+        </AuthContext.Consumer>
+    );
 };
 
 const styles = StyleSheet.create({
@@ -129,7 +124,7 @@ const styles = StyleSheet.create({
     },
     viewStyle: {
         flex: 1,
-
+        backgroundColor: "#fff",
     },
 });
 

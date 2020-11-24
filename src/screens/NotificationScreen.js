@@ -1,8 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, AsyncStorage } from "react-native";
 import { Text, Card, Button, Avatar, Header } from "react-native-elements";
 import { AuthContext } from "../providers/AuthProvider";
+import { FlatList } from "react-native";
+import { NotificationCard } from "../components/NotificationCard";
+import { getDataJSON } from "../functions/AsyncStorageFunctions";
 const NotificationScreen = (props) => {
+    const [notifArr, setnotifArr] = useState([]);
+    let notify = email.concat("notify");
+    const [email, setemail] = useState("");
+
+    const getNotifications = async () => {
+        await getDataJSON(notify).then((data) => {
+            if (data != null) {
+                setnotifArr(data);
+            } else
+                setnotifArr([]);
+        });
+    };
+    const getEmails = async () => {
+        await getDataJSON(mail).then((data) => {
+            if (data != null) {
+                setemail(data);
+            } else
+                setemail([]);
+        });
+    };
+    useEffect(() => {
+        getNotifications();
+    }, [notifArr])
+    useEffect(() => {
+        getEmails();
+    }, [])
+
+
     return (
         <AuthContext.Consumer>
             {(auth) => (
@@ -37,9 +68,24 @@ const NotificationScreen = (props) => {
                                 }}
                                 activeOpacity={1}
                             />
-                            <Text style={{ paddingHorizontal: 10 }}>
-                                Pam Beesley Liked Your Post.
-              </Text>
+                            <FlatList
+                                data={notifArr}
+                                renderItem={
+                                    nItem => (
+                                        <View>
+                                            <NotificationCard
+                                                name={nItem.item.name}
+                                                email={nItem.item.email}
+                                                date={nItem.item.date}
+                                                post={nItem.item.post}
+                                                notification={nItem.item.notification}
+                                                type={nItem.item.type}
+                                            />
+                                            <Card.Divider/>
+                                        </View>
+                                )}
+                            />
+
                         </View>
                     </Card>
                 </View>

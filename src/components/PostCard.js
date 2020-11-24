@@ -1,9 +1,20 @@
 import React from "react";
-import { View } from "react-native";
-import { Card, Button, Text, Avatar } from "react-native-elements";
+import { View} from "react-native";
+import { Card, Button, Text, Avatar} from "react-native-elements";
 import { AntDesign } from "@expo/vector-icons";
+import { useState, useEffect } from "react";
+import { storeData, storeDataJSON, getData, getDataJSON, removeData, mergeData } from "./../functions/AsyncStorageFunctions";
 
 const PostCard = (props) => {
+    const [Like, setLike] = useState(<AntDesign name="like2" size={24} color="dodgerblue" />);
+    const ChangeLikeIcon = () => {
+        return (<Button
+            title="Like"
+            type="outline"
+            icon={<AntDesign name="like1" size={24} color="black" />}
+        />
+        );
+    };
     return (
         <Card>
             <View
@@ -22,6 +33,7 @@ const PostCard = (props) => {
                     {props.name}
                 </Text>
             </View>
+            <Text style={{ fontStyle: "italic" }}> Posted on {props.date}</Text>
             <Text style={{ fontStyle: "italic" }}> {props.title}</Text>
             <Text
                 style={{
@@ -34,10 +46,16 @@ const PostCard = (props) => {
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                 <Button
                     type="outline"
-                    title="  Like (17)"
+                    title="Like"
                     icon={<AntDesign name="like2" size={24} color="dodgerblue" />}
+                    onPress={function () {
+                        setLike(ChangeLikeIcon());
+                    }}
+                
+                    
+
                 />
-                <Button type="solid" title="Comment (10)" />
+                <Button type="solid" title="Comment" />
             </View>
         </Card>
     );
